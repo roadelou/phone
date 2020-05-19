@@ -12,8 +12,12 @@
 #define BLOCK_ALLOCATION_CONTACT 5
 #endif
 
+#ifndef CONTACT_NAME_MAX_LEN
+#define CONTACT_NAME_MAX_LEN 51
+#endif
+
 typedef struct Contact {
-  char name[21];
+  char name[CONTACT_NAME_MAX_LEN];
   char number[12];
 } Contact;
 

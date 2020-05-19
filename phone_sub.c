@@ -75,8 +75,10 @@ int insert_database(Database *db, const Contact contact) {
       db->size += 5;
     }
   }
+  Contact *target = db->ref + db->count;
+  strncpy(target->name, (const char *)&(contact.name), CONTACT_NAME_MAX_LEN);
+  strncpy(target->number, (const char *)&(contact.number), 11);
   // Copying contact to database
-  memcpy(db->ref + db->count, &contact, sizeof(Contact));
   db->count++;
   info_log("Successfully inserted %s into database.", contact.name);
   return 1;
@@ -88,7 +90,7 @@ int delete_database(Database *db, const char *name) {
   int delete_count = 0;
   for (size_t i = 0; i < db->count; i++) {
     elt = db->ref[i];
-    if (strncmp(elt.name, name, 21) == 0) {
+    if (strncmp(elt.name, name, CONTACT_NAME_MAX_LEN) == 0) {
       // Found a contact to delete
       memmove(db->ref + i, db->ref + i + 1, (db->count - i) * sizeof(Contact));
       db->count--;
@@ -105,7 +107,7 @@ int query_database(const Database *db, const char *name) {
   int match_count = 0;
   for (size_t i = 0; i < db->count; i++) {
     elt = db->ref[i];
-    if (strncmp(elt.name, name, 21) == 0) {
+    if (strncmp(elt.name, name, CONTACT_NAME_MAX_LEN) == 0) {
       // Found a contact to delete
       info_log("Found contact %s with number %s.", elt.name, elt.number);
       match_count++;

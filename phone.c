@@ -1,7 +1,7 @@
 #include "phone.h"
 
 // The maximum amount of contatcs or requests that can be processed at once.
-static char name_list[BLOCK_ALLOCATION_CONTACT][21];
+static char name_list[BLOCK_ALLOCATION_CONTACT][CONTACT_NAME_MAX_LEN];
 static char number_list[BLOCK_ALLOCATION_CONTACT][11];
 static int cursor;
 
@@ -22,7 +22,7 @@ int main(int argc, const char *argv[]) {
                     BLOCK_ALLOCATION_CONTACT);
           return -1;
         } else {
-          strncpy(name_list[cursor], argv[optind - 1], 21);
+          strncpy(name_list[cursor], argv[optind - 1], CONTACT_NAME_MAX_LEN);
           strncpy(number_list[cursor], argv[optind], 11);
           optind++;
           cursor++;
@@ -41,7 +41,7 @@ int main(int argc, const char *argv[]) {
                     BLOCK_ALLOCATION_CONTACT);
           return -1;
         } else {
-          memcpy(name_list[cursor], optarg, 21);
+          memcpy(name_list[cursor], optarg, CONTACT_NAME_MAX_LEN);
           cursor++;
         }
       } else {
@@ -58,7 +58,7 @@ int main(int argc, const char *argv[]) {
                     BLOCK_ALLOCATION_CONTACT);
           return -1;
         } else {
-          memcpy(name_list[cursor], optarg, 21);
+          memcpy(name_list[cursor], optarg, CONTACT_NAME_MAX_LEN);
           cursor++;
         }
       } else {
@@ -170,8 +170,8 @@ int insert(const char *filename, const char *backup) {
 
   Contact elt;
   for (size_t i = 0; i < cursor; i++) {
-    memcpy(elt.name, name_list[i], 21);
-    memcpy(elt.number, number_list[i], 11);
+    strncpy(elt.name, name_list[i], CONTACT_NAME_MAX_LEN);
+    strncpy(elt.number, number_list[i], 11);
     status = insert_database(&db, elt);
     if (status == -1) {
       return -1;
